@@ -1,8 +1,6 @@
 {
-  "buildCommand": "cd KawaiiTube && npm run build",
-  "outputDirectory": "KawaiiTube/dist",
-  "installCommand": "cd KawaiiTube && npm install",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
+
