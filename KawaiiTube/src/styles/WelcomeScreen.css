@@ -1,0 +1,172 @@
+.welcome-screen {
+  padding: 20px;
+}
+
+.welcome-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.welcome-title {
+  font-size: 28px;
+  color: #8B4789;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+  line-height: 1.4;
+}
+
+.welcome-subtitle {
+  font-size: 16px;
+  color: #DDA0DD;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.featured-section {
+  margin-bottom: 25px;
+}
+
+.section-title {
+  font-size: 18px;
+  color: #FFB6C1;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.kawaii-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 15px;
+  margin-bottom: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.kawaii-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  border: 4px solid #DDA0DD;
+  padding: 15px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.1s;
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+}
+
+.kawaii-card:hover {
+  transform: translate(-2px, -2px);
+  border-color: #FFB6C1;
+  box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
+}
+
+.kawaii-img-container {
+  width: 100%;
+  height: 140px;
+  margin: 0 auto 12px;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(221, 160, 221, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kawaii-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  image-rendering: auto;
+  -ms-interpolation-mode: bicubic;
+  transition: transform 0.2s;
+  border-radius: 12px;
+}
+
+.kawaii-card:hover .kawaii-img {
+  transform: scale(1.05);
+}
+
+.kawaii-fallback {
+  display: none;
+  position: absolute;
+  inset: 0;
+  font-size: 48px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 182, 193, 0.2);
+}
+
+.kawaii-name {
+  font-size: 14px;
+  color: #8B4789;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.welcome-footer {
+  text-align: center;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.footer-icon {
+  font-size: 48px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.footer-text {
+  font-size: 15px;
+  color: #8B4789;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 500;
+  line-height: 1.6;
+  max-width: 400px;
+}
+
+@media (max-width: 768px) {
+  .welcome-title {
+    font-size: 11px;
+  }
+
+  .welcome-subtitle {
+    font-size: 7px;
+  }
+
+  .section-title {
+    font-size: 9px;
+  }
+
+  .kawaii-gallery {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 12px;
+    max-width: 400px;
+  }
+
+  .kawaii-img-container {
+    height: 80px;
+  }
+
+  .kawaii-fallback {
+    font-size: 36px;
+  }
+
+  .kawaii-name {
+    font-size: 7px;
+  }
+}

@@ -1,0 +1,32 @@
+.pusheen-mascot {
+  position: fixed;
+  bottom: 140px;
+  right: 30px;
+  width: 180px;
+  height: 180px;
+  z-index: 999;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.2));
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+.pusheen-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: auto;
+  -ms-interpolation-mode: bicubic;
+}
+
+@media (max-width: 768px) {
+  .pusheen-mascot {
+    width: 120px;
+    height: 120px;
+    bottom: 120px;
+    right: 10px;
+  }
+}

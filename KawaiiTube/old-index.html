@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KawaiiTube - Retro Music Player</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: linear-gradient(135deg, #FFB6C1 0%, #DDA0DD 50%, #B0E0E6 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 100px;
+    }
+
+    /* Checkered background pattern */
+    .bg-pattern {
+      position: fixed;
+      inset: 0;
+      opacity: 0.3;
+      pointer-events: none;
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255,255,255,0.3) 50px, rgba(255,255,255,0.3) 100px),
+        repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255,182,193,0.3) 50px, rgba(255,182,193,0.3) 100px);
+    }
+
+    /* Decorative elements */
+    .star, .heart {
+      position: fixed;
+      font-size: 32px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .star-1 { top: 30px; left: 30px; }
+    .star-2 { bottom: 60px; left: 60px; }
+    .heart-1 { top: 60px; right: 60px; color: #FFB6C1; }
+    .heart-2 { bottom: 30px; right: 30px; color: #FFB6C1; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+    }
+
+    /* Main container */
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Window header */
+    .window-header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 4px solid #DDA0DD;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .app-title {
+      font-size: 16px;
+      color: #DDA0DD;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .window-btn {
+      width: 35px;
+      height: 35px;
+      border-radius: 4px;
+      border: 3px solid;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      transition: all 0.2s;
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+    }
+
+    .window-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+    }
+
+    .window-btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+    }
+
+    .btn-minimize { background: #FFB6C1; border-color: #FF69B4; }
+    .btn-maximize { background: #B0E0E6; border-color: #87CEEB; }
+    .btn-close { background: #FFB347; border-color: #FF8C00; }
+
+    /* Search section */
+    .search-box {
+      background: #FFFACD;
+      border-radius: 15px;
+      border: 3px solid #FFD700;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-icon {
+      font-size: 20px;
+    }
+
+    .search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 12px;
+      color: #8B4789;
+      font-family: inherit;
+    }
+
+    .search-input::placeholder {
+      color: #DDA0DD;
+    }
+
+    .search-btn {
+      background: #DDA0DD;
+      border: 3px solid #8B4789;
+      border-radius: 4px;
+      padding: 10px 20px;
+      color: white;
+      cursor: pointer;
+      font-size: 8px;
+      font-family: 'Press Start 2P', cursive;
+      transition: all 0.1s;
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+    }
+
+    .search-btn:hover {
+      transform: translate(-2px, -2px);
+      background: #BA55D3;
+      box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+    }
+
+    .search-btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+    }
+
+    /* Navigation tabs */
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .nav-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: 4px solid #DDA0DD;
+      background: rgba(255, 255, 255, 0.9);
+      cursor: pointer;
+      transition: all 0.1s;
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.15);
+    }
+
+    .nav-tab:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0px rgba(0,0,0,0.15);
+    }
+
+    .nav-tab.active {
+      background: #DDA0DD;
+      border-color: #8B4789;
+      transform: translate(0, 0);
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+    }
+
+    .nav-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #FFB6C1;
+      border: 3px solid #DDA0DD;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .nav-tab.active .nav-icon {
+      background: #FFD6E8;
+    }
+
+    .nav-label {
+      font-size: 6px;
+      color: #8B4789;
+      font-family: 'Press Start 2P', cursive;
+      text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+    }
+
+    /* Content area */
+    .content-area {
+      flex: 1;
+      background: rgba(255, 250, 205, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 4px solid #FFD700;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .songs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .song-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 8px;
+      border: 4px solid #DDA0DD;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.1s;
+      position: relative;
+      box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+    }
+
+    .song-card:hover {
+      transform: translate(-2px, -2px);
+      border-color: #FFB6C1;
+      box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
+    }
+
+    .song-card-star {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      font-size: 12px;
+      color: #FFD700;
+    }
+
+    .favorite-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.2s;
+    }
+
+    .favorite-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .album-art-container {
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .album-art {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid #DDA0DD;
+    }
+
+    .play-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(221, 160, 221, 0.8);
+      backdrop-filter: blur(5px);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-size: 32px;
+    }
+
+    .album-art-container:hover .play-overlay {
+      opacity: 1;
+    }
+
+    .song-title {
+      font-size: 7px;
+      color: #8B4789;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: 'Press Start 2P', cursive;
+      line-height: 1.4;
+    }
+
+    .song-artist {
+      font-size: 6px;
+      color: #FFB6C1;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: 'Press Start 2P', cursive;
+      line-height: 1.4;
+    }
+
+    .song-duration {
+      font-size: 6px;
+      color: #8B4789;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Press Start 2P', cursive;
+    }
+
+    /* Empty state */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 15px;
+    }
+
+    .empty-icon {
+      font-size: 64px;
+    }
+
+    .empty-text {
+      font-size: 10px;
+      color: #8B4789;
+      text-align: center;
+      font-family: 'Press Start 2P', cursive;
+      line-height: 1.6;
+      max-width: 400px;
+    }
+
+    /* Welcome screen */
+    .welcome-screen {
+      padding: 20px;
+    }
+
+    .welcome-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .welcome-title {
+      font-size: 14px;
+      color: #8B4789;
+      font-family: 'Press Start 2P', cursive;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+    }
+
+    .welcome-subtitle {
+      font-size: 8px;
+      color: #DDA0DD;
+      font-family: 'Press Start 2P', cursive;
+      line-height: 1.6;
+    }
+
+    .featured-section {
+      margin-bottom: 25px;
+    }
+
+    .section-title {
+      font-size: 10px;
+      color: #FFB6C1;
+      font-family: 'Press Start 2P', cursive;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kawaii-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .kawaii-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 8px;
+      border: 4px solid #DDA0DD;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.1s;
+      box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+    }
+
+    .kawaii-card:hover {
+      transform: translate(-2px, -2px);
+      border-color: #FFB6C1;
+      box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
+    }
+
+    .kawaii-img {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 8px;
+      font-size: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .kawaii-name {
+      font-size: 7px;
+      color: #8B4789;
+      font-family: 'Press Start 2P', cursive;
+      line-height: 1.4;
+    }
+
+    /* Loading state */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 15px;
+    }
+
+    .loading-icon {
+      font-size: 64px;
+      animation: bounce 1s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    /* Now playing bar */
+    .now-playing {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg, #DDA0DD 0%, #FFB6C1 50%, #B0E0E6 100%);
+      border-top: 4px solid #8B4789;
+      padding: 15px;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    .now-playing-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .now-playing-main {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    /* Progress bar */
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+      border: 2px solid #8B4789;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: white;
+      width: 0%;
+      transition: width 0.1s linear;
+      box-shadow: 2px 0 4px rgba(0,0,0,0.2);
+    }
+
+    .time-display {
+      font-size: 6px;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      min-width: 60px;
+      text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+    }
+
+    .now-playing-art {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      border: 3px solid white;
+      object-fit: cover;
+    }
+
+    .now-playing-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .now-playing-title {
+      font-size: 8px;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 5px;
+      font-family: 'Press Start 2P', cursive;
+      text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+    }
+
+    .now-playing-artist {
+      font-size: 6px;
+      color: #FFE4E1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: 'Press Start 2P', cursive;
+      text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .control-btn {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      border: 3px solid #8B4789;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.1s;
+      font-size: 16px;
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+    }
+
+    .control-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+    }
+
+    .control-btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+    }
+
+    .control-btn.play-btn {
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+      background: #FFB6C1;
+      border-color: #FF69B4;
+    }
+
+    .volume-icon {
+      font-size: 24px;
+      color: white;
+    }
+
+    /* Scrollbar */
+    .content-area::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    .content-area::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+    }
+
+    .content-area::-webkit-scrollbar-thumb {
+      background: #DDA0DD;
+      border-radius: 10px;
+      border: 2px solid rgba(255, 250, 205, 0.95);
+    }
+
+    .content-area::-webkit-scrollbar-thumb:hover {
+      background: #BA55D3;
+    }
+
+    /* Pusheen mascot */
+    .pusheen-mascot {
+      position: fixed;
+      bottom: 120px;
+      right: 30px;
+      width: 180px;
+      height: 180px;
+      z-index: 999;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.2));
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .pusheen-mascot svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Responsive - ocultar en pantallas pequeñas */
+    @media (max-width: 768px) {
+      .pusheen-mascot {
+        width: 120px;
+        height: 120px;
+        bottom: 100px;
+        right: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Decorative elements -->
+  <div class="bg-pattern"></div>
+  <div class="star star-1">⭐</div>
+  <div class="star star-2">⭐</div>
+  <div class="heart heart-1">💗</div>
+  <div class="heart heart-2">💗</div>
+
+  <!-- Pusheen kawaii mascot -->
+  <div class="pusheen-mascot">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Almohadas de fondo -->
+      <rect x="20" y="120" width="50" height="40" rx="8" fill="#B3E5FC" stroke="#5D4037" stroke-width="3"/>
+      <rect x="130" y="120" width="50" height="40" rx="8" fill="#FFB6C1" stroke="#5D4037" stroke-width="3"/>
+      <rect x="40" y="130" width="45" height="35" rx="8" fill="#C8E6C9" stroke="#5D4037" stroke-width="3"/>
+      
+      <!-- Café y galletas -->
+      <rect x="25" y="145" width="25" height="20" rx="4" fill="#FFB6C1" stroke="#5D4037" stroke-width="2"/>
+      <circle cx="30" cy="155" r="4" fill="#8D6E63"/>
+      
+      <!-- Lata de bebida -->
+      <rect x="155" y="145" width="15" height="25" rx="2" fill="#C8E6C9" stroke="#5D4037" stroke-width="2"/>
+      <ellipse cx="162.5" cy="143" rx="7.5" ry="3" fill="#A5D6A7" stroke="#5D4037" stroke-width="2"/>
+      
+      <!-- Galletas en el suelo -->
+      <circle cx="40" cy="165" r="6" fill="#FFCC80" stroke="#5D4037" stroke-width="2"/>
+      <circle cx="43" cy="167" r="2" fill="#8D6E63"/>
+      <circle cx="60" cy="168" r="5" fill="#FFCC80" stroke="#5D4037" stroke-width="2"/>
+      <circle cx="62" cy="169" r="1.5" fill="#8D6E63"/>
+      <circle cx="70" cy="168" r="3" fill="#FFCC80" stroke="#5D4037" stroke-width="2"/>
+      
+      <!-- Cuerpo del gatito (Pusheen style) -->
+      <ellipse cx="100" cy="100" rx="45" ry="50" fill="#A1887F" stroke="#5D4037" stroke-width="4"/>
+      
+      <!-- Manchas -->
+      <ellipse cx="75" cy="110" rx="8" ry="10" fill="#8D6E63" opacity="0.6"/>
+      <ellipse cx="130" cy="115" rx="6" ry="8" fill="#8D6E63" opacity="0.6"/>
+      
+      <!-- Patitas inferiores -->
+      <ellipse cx="80" cy="140" rx="15" ry="12" fill="#9E9D89" stroke="#5D4037" stroke-width="3"/>
+      <ellipse cx="120" cy="140" rx="15" ry="12" fill="#9E9D89" stroke="#5D4037" stroke-width="3"/>
+      
+      <!-- Patitas superiores sosteniendo libros -->
+      <ellipse cx="70" cy="95" rx="10" ry="15" fill="#9E9D89" stroke="#5D4037" stroke-width="3"/>
+      <ellipse cx="130" cy="95" rx="10" ry="15" fill="#9E9D89" stroke="#5D4037" stroke-width="3"/>
+      
+      <!-- Libros/CDs en las patitas -->
+      <rect x="85" y="85" width="30" height="25" rx="2" fill="#FFB6C1" stroke="#5D4037" stroke-width="2"/>
+      <line x1="88" y1="90" x2="112" y2="90" stroke="#FFE0E9" stroke-width="1"/>
+      <line x1="88" y1="95" x2="112" y2="95" stroke="#C8E6C9" stroke-width="1"/>
+      <line x1="88" y1="100" x2="112" y2="100" stroke="#B3E5FC" stroke-width="1"/>
+      
+      <!-- Cola -->
+      <ellipse cx="145" cy="110" rx="12" ry="20" fill="#8D6E63" stroke="#5D4037" stroke-width="3" transform="rotate(30 145 110)"/>
+      
+      <!-- Cara -->
+      <!-- Orejas con audífonos -->
+      <ellipse cx="75" cy="65" rx="8" ry="12" fill="#8D6E63" stroke="#5D4037" stroke-width="3"/>
+      <ellipse cx="125" cy="65" rx="8" ry="12" fill="#8D6E63" stroke="#5D4037" stroke-width="3"/>
+      
+      <!-- Diadema de audífonos -->
+      <path d="M 70 60 Q 100 45 130 60" stroke="#FFB6C1" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <path d="M 70 60 Q 100 48 130 60" stroke="#FFC0CB" stroke-width="4" fill="none" stroke-linecap="round"/>
+      
+      <!-- Audífonos -->
+      <circle cx="70" cy="70" r="12" fill="#C8E6C9" stroke="#5D4037" stroke-width="3"/>
+      <circle cx="70" cy="70" r="8" fill="#A5D6A7"/>
+      <circle cx="130" cy="70" r="12" fill="#C8E6C9" stroke="#5D4037" stroke-width="3"/>
+      <circle cx="130" cy="70" r="8" fill="#A5D6A7"/>
+      
+      <!-- Cabeza -->
+      <circle cx="100" cy="75" r="35" fill="#A1887F" stroke="#5D4037" stroke-width="4"/>
+      
+      <!-- Bigotes -->
+      <line x1="60" y1="80" x2="45" y2="78" stroke="#5D4037" stroke-width="2" stroke-linecap="round"/>
+      <line x1="60" y1="85" x2="45" y2="87" stroke="#5D4037" stroke-width="2" stroke-linecap="round"/>
+      <line x1="140" y1="80" x2="155" y2="78" stroke="#5D4037" stroke-width="2" stroke-linecap="round"/>
+      <line x1="140" y1="85" x2="155" y2="87" stroke="#5D4037" stroke-width="2" stroke-linecap="round"/>
+      
+      <!-- Ojos felices -->
+      <circle cx="88" cy="75" r="4" fill="#5D4037"/>
+      <circle cx="112" cy="75" r="4" fill="#5D4037"/>
+      
+      <!-- Boca kawaii -->
+      <path d="M 95 85 Q 100 88 105 85" stroke="#5D4037" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="100" cy="82" r="2" fill="#FFB6C1"/>
+      
+      <!-- Mejillas sonrojadas -->
+      <circle cx="78" cy="82" r="6" fill="#FFB6C1" opacity="0.5"/>
+      <circle cx="122" cy="82" r="6" fill="#FFB6C1" opacity="0.5"/>
+      
+      <!-- Detalles de audífonos (notas musicales) -->
+      <text x="66" y="73" font-family="Arial" font-size="8" fill="#5D4037">♪</text>
+      <text x="126" y="73" font-family="Arial" font-size="8" fill="#5D4037">♫</text>
+    </svg>
+  </div>
+
+  <div class="container">
+    <!-- Window Header -->
+    <div class="window-header">
+      <div class="title-bar">
+        <div class="app-title">
+          <span>🎵</span>
+          <span>KawaiiTube</span>
+        </div>
+        <div class="window-controls">
+          <button class="window-btn btn-minimize">_</button>
+          <button class="window-btn btn-maximize">□</button>
+          <button class="window-btn btn-close" onclick="window.location.href='about:blank'">X</button>
+        </div>
+      </div>
+
+      <!-- Search Box -->
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          class="search-input" 
+          id="searchInput"
+          placeholder="Search for music..."
+          onkeypress="handleKeyPress(event)"
+        />
+        <button class="search-btn" onclick="searchMusic()">GO!</button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <div class="nav-tab active" id="homeTab" onclick="switchTab('home')">
+        <div class="nav-icon">🐰</div>
+        <div class="nav-label">Home</div>
+      </div>
+      <div class="nav-tab" id="favoritesTab" onclick="switchTab('favorites')">
+        <div class="nav-icon">💖</div>
+        <div class="nav-label">Favorites</div>
+      </div>
+      <div class="nav-tab" id="libraryTab" onclick="switchTab('library')">
+        <div class="nav-icon">☁️</div>
+        <div class="nav-label">Library</div>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area" id="contentArea">
+      <div class="empty-state">
+        <div class="empty-icon">🎀</div>
+        <div class="empty-text">Search for your favorite music! ♪</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Now Playing Bar (hidden by default) -->
+  <div class="now-playing" id="nowPlaying" style="display: none;">
+    <div class="now-playing-content">
+      <!-- Progress bar -->
+      <div class="progress-container">
+        <span class="time-display" id="currentTime">0:00</span>
+        <div class="progress-bar" id="progressBar" onclick="seekTo(event)">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span class="time-display" id="totalTime">0:00</span>
+      </div>
+      
+      <!-- Player info and controls -->
+      <div class="now-playing-main">
+        <img id="npArt" class="now-playing-art" src="" alt="Album Art" />
+        <div class="now-playing-info">
+          <div class="now-playing-title" id="npTitle">Song Title</div>
+          <div class="now-playing-artist" id="npArtist">Artist Name</div>
+        </div>
+        <div class="player-controls">
+          <button class="control-btn" onclick="skipBackward()" title="-10s">⏪</button>
+          <button class="control-btn play-btn" id="playControl" onclick="togglePlay()">
+            <span id="playIcon">▶️</span>
+          </button>
+          <button class="control-btn" onclick="skipForward()" title="+10s">⏩</button>
+        </div>
+        <span class="volume-icon">🔊</span>
+      </div>
+    </div>
+  </div>
+
+  <audio id="audioPlayer"></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+.search-container {
+  position: relative;
+}
+
+.search-box {
+  background: #FFFACD;
+  border-radius: 15px;
+  border: 3px solid #FFD700;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-icon {
+  font-size: 20px;
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #8B4789;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 500;
+}
+
+.search-input::placeholder {
+  color: #DDA0DD;
+}
+
+.clear-btn {
+  background: transparent;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #DDA0DD;
+  cursor: pointer;
+  font-size: 18px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-btn:hover {
+  background: rgba(221, 160, 221, 0.2);
+  color: #8B4789;
+  transform: scale(1.1);
+}
+
+.clear-btn:active {
+  transform: scale(0.95);
+}
+
+/* Suggestions Dropdown */
+.suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 15px;
+  border: 3px solid #FFD700;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 9999;
+  max-height: 300px;
+  overflow-y: auto;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.suggestion-item {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 2px solid #FFFACD;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background: linear-gradient(90deg, #FFB6C1 0%, #DDA0DD 100%);
+  color: white;
+}
+
+.suggestion-icon {
+  font-size: 18px;
+}
+
+.suggestion-text {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  color: #8B4789;
+}
+
+.suggestion-item:hover .suggestion-text {
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .search-input {
+    font-size: 14px;
+  }
+
+  .clear-btn {
+    width: 25px;
+    height: 25px;
+    font-size: 16px;
+  }
+
+  .suggestion-item {
+    padding: 10px 15px;
+  }
+
+  .suggestion-text {
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Fredoka', 'Baloo 2', sans-serif;
+  background: linear-gradient(135deg, #FFB6C1 0%, #DDA0DD 50%, #B0E0E6 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
