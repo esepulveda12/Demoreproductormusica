@@ -15,7 +15,7 @@
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/esepulveda12/IARA_MVP.git
+   git clone https://github.com/esepulveda12/kawwaii.git
    ```
 2. Instala las dependencias:
    ```bash
